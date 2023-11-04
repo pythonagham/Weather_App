@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import tkinter as tk
 import requests
 from time import strftime
@@ -11,45 +12,52 @@ root.resizable(False,False)
 def getWeather():
     try:
         city=textfield.get()
-        url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=06c921750b9a82d8f5d1294e1586276f"
+        API_key = "Your_Own_API_key"
+        url = f"https://api.openweathermap.org/data/"\
+              f"2.5/weather?q={city}&appid={API_key}"
         json_data=requests.get(url).json()
         condition=json_data["weather"][0]["main"]
-        description=json_data["weather"][0]["description"]
+        des=json_data["weather"][0]["description"]
         temp = int(json_data['main']['temp'] - 273.15)
         pressure=json_data["main"]["pressure"]
         humidity=json_data["main"]["humidity"]
         wind=json_data["wind"]["speed"]
+        country=json_data["sys"]["country"]
+
         t.config(text=(str(temp) + "°C"))
         c.config(text=(condition))
         w.config(text=wind)
         h.config(text=humidity)
-        d.config(text=description)
+        d.config(text=des)
         p.config(text=pressure)
+        ct.config(text=f'{city}, {country}')
 
     except Exception as e:
-        messagebox.showerror("Weather App", "Invalid Entry!")
+        messagebox.showerror("Weather App",
+                             "Invalid Entry!")
 
 #search box
 search_image=PhotoImage(file="search.png")
 myimage=Label(image=search_image)
-myimage.place(x=20,y=20)
+myimage.place(x=60,y=20)
 
 textfield=tk.Entry(root,justify="center",
                    width=17,font=("poppins",
                    25,"bold"),bg="#404040",
                    border=0,fg="white")
-textfield.place(x=50,y=40)
+textfield.place(x=85,y=40)
 textfield.focus()
 
 search_icon=PhotoImage(file="search_icon.png")
 myimage_icon=Button(image=search_icon, borderwidth=0,
-                    cursor="hand2",bg="#404040",command=getWeather)
-myimage_icon.place(x=400,y=34)
+                    cursor="hand2",bg="#404040",
+                    command=getWeather)
+myimage_icon.place(x=440,y=32)
 
 #logo
 logo_image=PhotoImage(file="logo.png")
 logo=Label(image=logo_image)
-logo.place(x=150,y=100)
+logo.place(x=190,y=110)
 
 #bottom box
 frame_image=PhotoImage(file="box.png")
@@ -79,11 +87,11 @@ label4.place(x=650,y=400)
 
 t=Label(font=("arial",70,"bold"),
         fg="#FA0053")
-t.place(x=400,y=150)
+t.place(x=450,y=150)
 
 c=Label(font=("arial",15,"bold"),
         fg="#414040")
-c.place(x=405,y=255)
+c.place(x=455,y=255)
 
 w=Label(text="...",font=("arial",20,"bold"),
         bg="#1ab5ef")
@@ -101,14 +109,13 @@ p=Label(text="...",font=("arial",20,"bold"),
         bg="#1ab5ef")
 p.place(x=670,y=430)
 
+ct=Label(root,font=("arial",18,"bold"),fg="#0CBCE7")
+ct.place(x=80, y=132)
 
-# name=Label(root,font=("arial",15,"bold"))
-# name.config(text="Current Weather")
-# name.place(x=30, y=100)
-
-clock=Label(font=("arial",18,"bold"),fg="#414040")
+clock=Label(font=("arial",16,"bold"),fg="#414040")
 current_time=strftime('%I:%M %p')
 clock.config(text=current_time)
-clock.place(x=38,y=130)
+clock.place(x=80,y=170)
 
 root.mainloop()
+
